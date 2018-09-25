@@ -2,6 +2,7 @@ package Selenium.Utils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.Alert;
@@ -240,5 +241,55 @@ public class SeleniumUtils {
 		driver.switchTo().frame(frame);
 		wait(2);
 	}
+	
+	
+	public void switchToWindow() {
+		System.out.println(driver.getCurrentUrl());
+		System.out.println(driver.getTitle());
+		String currentWindowId = driver.getWindowHandle();
+		wait(4);
+		Set<String> Ids = driver.getWindowHandles(); 
+		for(String Id : Ids) {
+			System.out.println(Id);
+			if(!Id.equals(currentWindowId)) {
+				driver.switchTo().window(Id);
+			}
+			
+		}
+		
+		System.out.println(driver.getCurrentUrl());
+		System.out.println(driver.getTitle());
+	}
+	
+	public void switchToWindow(String url) {
+		System.out.println(driver.getCurrentUrl());
+		System.out.println(driver.getTitle());
+		String currentWindowId = driver.getWindowHandle();
+		wait(4);
+		Set<String> Ids = driver.getWindowHandles(); 
+		for(String Id : Ids) {
+			driver.switchTo().window(currentWindowId); 
+			if(driver.getCurrentUrl().contains(url)) {
+				break;
+			}
+			
+		}
+		
+		System.out.println(driver.getCurrentUrl());
+		System.out.println(driver.getTitle());
+	}
+	
+	
+	
+	public void windowClose() {
+		System.out.println("Closed windows " + driver.getTitle());
+		driver.close();
+	}
+	
+	public void quit() {
+		System.out.println("Closed windows " + driver.getTitle());
+		driver.quit();
+	}
+	
 	
 }
