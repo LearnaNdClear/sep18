@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="smoke">
+     <parameter name="browser" value="chrome"></parameter>
+     <parameter name="url" value="http://www.google.com"></parameter>
+    <test name="Iteration1">
+        <classes>
+            <class name="Selenium.First.AssertVsVerify" />
+        </classes>
+    </test>
+    
+ 
+ 
+</suite>

@@ -2,7 +2,9 @@ package Selenium.Utils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.NoSuchElementException;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.Alert;
@@ -17,7 +19,14 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.Wait;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
+
+import com.google.common.base.Function;
 
 /**
  * @author HP
@@ -26,6 +35,7 @@ import org.openqa.selenium.support.ui.Select;
 public class SeleniumUtils {
 	//driver intialization
 	WebDriver driver =  null;
+	String parentWindowID = null;
 	
 	
 	/**Enter text in text box
@@ -291,5 +301,115 @@ public class SeleniumUtils {
 		driver.quit();
 	}
 	
+	/**
+	 * Close browser
+	 */
+	public void closeBrowser(){
+		driver.close();
+	}
 	
+	
+	/**
+	 * Switch to window with given title
+	 * @param titleOfExpectedWindow
+	 * @return
+	 */
+	public String windowHandlingwindowHandling(String titleOfExpectedWindow){
+		parentWindowID = driver.getWindowHandle();
+		System.out.println("parent window ID " + parentWindowID);
+		
+		// get all window IDs
+		Set<String> windowIDs = driver.getWindowHandles();
+
+		/**
+		 * loop thru window IDs and switch to each window & do getTitle action to verify whether the current window title
+		 * matches with expected window title
+		 *  
+		 */
+		
+		for (String windowID : windowIDs) {
+			System.out.println(windowID);
+			
+			driver.switchTo().window(windowID);
+			String title = driver.getTitle();
+			System.out.println("TITLE is " + title);
+			
+			if (title.contains(titleOfExpectedWindow)) {
+				break;
+			}
+
+		}
+		
+		return driver.getWindowHandle();
+
+	}
+
+	/**
+	 * Go back to particular window
+	 * 
+	 * @param childWindowId
+	 */
+	public void goBackParentWindow(String childWindowId){
+		driver.switchTo().window(childWindowId);
+	}
+	
+	/**
+	 * Go back to parent window
+	 */
+	public void goBackParentWindow(){
+		driver.switchTo().window(parentWindowID);
+	}
+
+	
+	public void explicitWait(ExpectedConditions cond, int seconds, By locate){
+		WebDriverWait wait = new WebDriverWait(driver, seconds);
+		wait.until(ExpectedConditions.alertIsPresent());
+	}
+	
+	public void fluentWait(ExpectedConditions cond, int seconds, int pollSeconds, By locate){
+		
+		    
+		    Wait wait = new FluentWait(driver)
+		    		 .withTimeout(seconds, TimeUnit.SECONDS)
+					 .pollingEvery(pollSeconds, TimeUnit.SECONDS)
+		    	 
+		    	    .ignoring(NoSuchElementException.class);
+		    	 
+
+		    WebElement element = (WebElement) wait.until(new Function<WebDriver, WebElement>() {
+		    public WebElement apply(WebDriver driver) {
+		    WebElement element = driver.findElement(By.xpath("//*[@id='softwareTestingMaterial']"));
+		    String getTextOnPage = element.getText();
+		    if(getTextOnPage.equals("Software Testing Material - DEMO PAGE")){
+		    System.out.println(getTextOnPage);
+		    return element;
+		    }else{
+		    System.out.println("FluentWait Failed");
+		    return null;
+		    }
+		    }
+		    });
+	}
+	
+	public void verifyTitle(String expectedTitle){
+		String actualTitle = driver.getTitle();
+		Assert.assertEquals(expectedTitle, actualTitle,"Title not equal");
+	}
+	
+	
+	public void verifyElementText(String locatorType, String locator,String expectedText){
+		System.out.println("Verify the text " + expectedText + " in locator " + locator);
+		By locate = findLocator(locatorType,locator);
+		String actualText = driver.findElement(locate).getText();
+		Assert.assertEquals(expectedText, actualText,"Text not equal :" + expectedText + "!=" + actualText);
+	}
+	
+	public void verifyAlertText(String expectedText){
+		wait(2);
+		String actualText= driver.switchTo().alert().getText();
+		
+		Assert.assertEquals(actualText, expectedText,actualText + "!=" + expectedText);
+		
+	}
+
 }

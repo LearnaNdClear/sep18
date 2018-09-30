@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="smoke" parallel="tests" thread-count="2">
+    
+    <test name="chrome">
+     <parameter name="browser" value="chrome"></parameter>
+     <parameter name="url" value="http://www.google.com"></parameter>
+        <classes>
+            <class name="Selenium.First.AssertVsVerify" />
+        </classes>
+    </test>
+    
+     <test name="firefox">
+      <parameter name="browser" value="edge"></parameter>
+     <parameter name="url" value="http://www.google.com"></parameter>
+        <classes>
+            <class name="Selenium.First.AssertVsVerify" />
+        </classes>
+    </test>
+ 
+ 
+</suite>

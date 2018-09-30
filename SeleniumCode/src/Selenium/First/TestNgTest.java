@@ -20,15 +20,15 @@ public class TestNgTest {
 	public void m2() {
 		System.out.println("I'm inside m2");
 	}
-	@BeforeMethod
+	@BeforeMethod(groups={"smoke"})
 	public void m3() {
 		System.out.println("I'm inside m3");
 	}
-	@Test
+	@Test(groups={"smoke"})
 	public void m4() {
 		System.out.println("I'm inside m4");
 	}
-	@Test
+	@Test(groups={"sanity","smoke"})
 	public void m51() {
 		System.out.println("I'm inside m5");
 	}

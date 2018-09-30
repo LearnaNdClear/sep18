@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 <suite name="smoke">
+		<groups>
+         <run>
+            <exclude name = "itr1" />
+         </run>
+      </groups> 
      
     <test name="Iteration1">
         <classes>
-            <class name="Selenium.First.TestNgTest">
-            <methods><include name="m5" /></methods>    </class>
+            <class name="Selenium.First.TestNgTest"> 
+            <methods >
+            <exclude name ="m1"/></methods></class>
         </classes>
     </test>
     
